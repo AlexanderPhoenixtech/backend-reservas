@@ -1,12 +1,14 @@
 const express = require('express');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const cors = require('cors');
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.post('/api/shopify-orders', async (req, res) => {
+  const fetch = (await import('node-fetch')).default
   const { shopUrl, accessToken, query } = req.body;
   const shopifyUrl = `${shopUrl}/admin/api/2025-01/graphql.json`;
 
@@ -22,6 +24,7 @@ app.post('/api/shopify-orders', async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (error) {
+    console.error(  error)
     res.status(500).json({ error: 'Error fetching from Shopify', details: error.message });
   }
 });
